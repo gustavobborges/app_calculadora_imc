@@ -39,6 +39,7 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       peso = _controllerPeso.text = "";
       altura = _controllerAltura.text = "";
+      imc = _controllerImc.text = "";
     });
   }
 
@@ -48,13 +49,6 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: const Text('CALCULADORA IMC'),
         actions: <Widget>[
-          IconButton(
-              icon: Icon(Icons.refresh_sharp),
-              onPressed: () {
-                setState(() {
-                  refresh();
-                });
-              }),
           IconButton(
             icon: const Icon(Icons.navigate_next),
             tooltip: 'Go to the next page',
@@ -163,17 +157,63 @@ class _MyHomePageState extends State<MyHomePage> {
                     onPressed: () {
                       if (_formKey.currentState.validate()) {
                         setState(() {
-                          imc = _controllerImc.value.text;
+                          altura = _controllerAltura.value.text;
+                          peso = _controllerPeso.value.text;
+                          var alturaInt = int.parse(altura);
+                          var pesoint = int.parse(peso);
+                          var imcInt = pesoint/((alturaInt * alturaInt)/10000);
+                          var imcDouble = imcInt.toStringAsPrecision(4);
+                          imc = imcDouble;
+                          print('Peso: ${alturaInt} | Altura: ${pesoint} | Imc: ${imcDouble}');
                         });
                       }
                     },
                     child: Text("Calcular IMC!"),
                   ),
                 ),
+                Padding(
+                  padding: EdgeInsets.only(top: 30),
+                  child: RichText(
+                    text: TextSpan(
+                      text: imc,
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 40,
+                          color: Colors.purple,
+                      ),
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          setState(() {
+            refresh();
+          });
+        },
+        child: const Icon(Icons.refresh),
+        backgroundColor: Colors.purple,
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: 0,
+        items: [
+          BottomNavigationBarItem(
+              icon: Icon(Icons.favorite),
+              title: Text("IMC")
+          ),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.person),
+              title: Text("Minha conta")
+          ),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.motorcycle),
+              title: Text("Configurações")
+          ),
+        ],
       ),
     );
   }
