@@ -1,17 +1,26 @@
-# calculadora_imc
+# Calculadora de IMC
 
-A new Flutter application.
+Aplicação desenvolvida em Flutter que oferece um simples cálculo de IMC seguido por uma indicação se o resultado está bou ou ruim.
 
-## Getting Started
+## Usabilidade
 
-This project is a starting point for a Flutter application.
+O aplicativo basicamente é este formulário com o botão de calcular o IMC.
 
-A few resources to get you started if this is your first Flutter project:
+    <img src="/lib/images/index.png">
+    <img src="/lib/images/preenchendo_dados.png">
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+Após preencher os dados e clicar no botão, será apresentado seu IMC e a informação se está dentro ou fora do que é considerado mais saudável.
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
-# app_calculadora_imc
+    <img src="/lib/images/resultado_parabens.png">
+
+A primeira palavre recebe uma cor conforme o resultado.. Caso o resultado seja negativo, poderão ser apresentadas as seguintes respostas:
+
+    <img src="/lib/images/resultado_abaixo.png">
+    <img src="/lib/images/resultado_acima.png">
+
+Em qualquer momento, o usuário pode clicar no botão flutuante Refresh, para limpar todos os dados da tela.
+
+    <img src="/lib/images/refresh.png">
+
+
+# Calculadora de IMC
