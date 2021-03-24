@@ -6,7 +6,7 @@ Aplicação desenvolvida em Flutter que oferece um simples cálculo de IMC segui
 
 O aplicativo basicamente é este formulário com o botão de calcular o IMC.
 
-<img src="images/index.png">
+<img src="lib/images/index.png">
 
     <img src="lib/images/preenchendo_dados.png">
 
