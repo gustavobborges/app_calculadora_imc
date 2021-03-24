@@ -11,6 +11,7 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: Colors.purple,
+        fontFamily: 'Roboto'
       ),
       home: MyHomePage(title: 'Calculadora IMC'),
     );
@@ -27,24 +28,34 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final _formKey = GlobalKey<FormState>();
+
   TextEditingController _controllerPeso = TextEditingController();
   TextEditingController _controllerAltura = TextEditingController();
   TextEditingController _controllerImc = TextEditingController();
+  TextEditingController _controllerMensagem = TextEditingController();
+  TextEditingController _controllerResultado = TextEditingController();
+
 
   String peso;
   String altura;
   String imc;
+  String mensagem = "";
+  String resultado = "";
 
   void refresh() {
     setState(() {
       peso = _controllerPeso.text = "";
       altura = _controllerAltura.text = "";
       imc = _controllerImc.text = "";
+      mensagem = _controllerMensagem.text = "";
+      resultado = _controllerResultado.text = "";
+
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    Widget child;
     return Scaffold(
       appBar: AppBar(
         title: const Text('CALCULADORA IMC'),
@@ -134,7 +145,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   obscureText: false,
                   decoration: InputDecoration(
                       icon: Icon(Icons.straighten_rounded),
-                      labelText: "Sua altura"),
+                      labelText: "Sua altura (cm)"),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return "Informa a altura!";
@@ -162,9 +173,21 @@ class _MyHomePageState extends State<MyHomePage> {
                           var alturaInt = int.parse(altura);
                           var pesoint = int.parse(peso);
                           var imcInt = pesoint/((alturaInt * alturaInt)/10000);
-                          var imcDouble = imcInt.toStringAsPrecision(4);
-                          imc = imcDouble;
-                          print('Peso: ${alturaInt} | Altura: ${pesoint} | Imc: ${imcDouble}');
+
+                          if(imcInt < 18.49) {
+                            resultado = "Atenção! ";
+                            mensagem = "Provavelmente você está abaixo do peso!";
+                          }
+                          else if (imcInt <= 25) {
+                            resultado = "Parabéns! ";
+                            mensagem = "Seu IMC provavelmente está saudável!";
+                          }
+                          else if (imcInt > 25) {
+                            resultado = "Atenção! ";
+                            mensagem = "Provavelmente você está acima do peso!";
+                          }
+                          var imcString = imcInt.toStringAsPrecision(4);
+                          imc = imcString;
                         });
                       }
                     },
@@ -183,6 +206,27 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                     ),
                   ),
+                ),
+
+                Padding(
+                  padding: EdgeInsets.only(top: 30),
+                  child: (resultado == "Atenção! ")
+                  ? RichText(
+                    text: TextSpan(
+                      children: <TextSpan>[
+                        TextSpan(text: resultado, style: TextStyle(fontWeight: FontWeight.bold, color: Colors.red, fontSize: 22)),
+                        TextSpan(text: mensagem, style: TextStyle(color: Colors.grey, fontSize: 22)),
+                        ],
+                      ),
+                    )
+                  : RichText(
+                    text: TextSpan(
+                      children: <TextSpan>[
+                        TextSpan(text: resultado, style: TextStyle(fontWeight: FontWeight.bold, color: Colors.green, fontSize: 22)),
+                        TextSpan(text: mensagem, style: TextStyle(color: Colors.grey, fontSize: 22)),
+                      ],
+                    ),
+                  )
                 ),
               ],
             ),
