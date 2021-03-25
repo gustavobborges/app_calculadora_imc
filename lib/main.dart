@@ -35,12 +35,12 @@ class _MyHomePageState extends State<MyHomePage> {
   TextEditingController _controllerMensagem = TextEditingController();
   TextEditingController _controllerResultado = TextEditingController();
 
-
   String peso;
   String altura;
   String imc;
-  String mensagem = "";
-  String resultado = "";
+  String mensagem;
+  String resultado;
+  int _selectedIndex = 1;
 
   void refresh() {
     setState(() {
@@ -49,7 +49,12 @@ class _MyHomePageState extends State<MyHomePage> {
       imc = _controllerImc.text = "";
       mensagem = _controllerMensagem.text = "";
       resultado = _controllerResultado.text = "";
+    });
+  }
 
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
     });
   }
 
@@ -119,19 +124,21 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
       body: Container(
-        child: Form(
+         child: (_selectedIndex == 1)
+         ? Form(
           key: _formKey,
           child: Padding(
             padding: EdgeInsets.only(top: 30, right: 30, left: 30, bottom: 15),
             child: Column(
               children: [
                 TextFormField(
-                  keyboardType: TextInputType.phone,
+                  keyboardType: TextInputType.number,
                   controller: _controllerPeso,
                   obscureText: false,
                   decoration: InputDecoration(
                       icon: Icon(Icons.straighten_rounded),
-                      labelText: "Seu peso"),
+                      labelText: "Seu peso (kg)",
+                  ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return "Informe o peso!";
@@ -140,7 +147,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   },
                 ),
                 TextFormField(
-                  keyboardType: TextInputType.phone,
+                  keyboardType: TextInputType.number,
                   controller: _controllerAltura,
                   obscureText: false,
                   decoration: InputDecoration(
@@ -162,32 +169,34 @@ class _MyHomePageState extends State<MyHomePage> {
                               borderRadius: BorderRadius.circular(18.0),
                               side:
                                   BorderSide(color: Colors.deepPurpleAccent))),
-                      minimumSize:
-                          MaterialStateProperty.all<Size>(Size(300, 60)),
+                      minimumSize: MaterialStateProperty.all<Size>(Size(300, 60)),
                     ),
                     onPressed: () {
                       if (_formKey.currentState.validate()) {
                         setState(() {
+
                           altura = _controllerAltura.value.text;
                           peso = _controllerPeso.value.text;
-                          var alturaInt = int.parse(altura);
-                          var pesoint = int.parse(peso);
-                          var imcInt = pesoint/((alturaInt * alturaInt)/10000);
 
-                          if(imcInt < 18.49) {
+                          var alturaDouble = double.parse(altura);
+                          var pesoDouble = double.parse(peso);
+
+                          var imcDouble = pesoDouble/((alturaDouble * alturaDouble)/10000);
+
+                          if(imcDouble < 18.49) {
                             resultado = "Atenção! ";
                             mensagem = "Provavelmente você está abaixo do peso!";
                           }
-                          else if (imcInt <= 25) {
+                          else if (imcDouble <= 25) {
                             resultado = "Parabéns! ";
                             mensagem = "Seu IMC provavelmente está saudável!";
                           }
-                          else if (imcInt > 25) {
+                          else if (imcDouble > 25) {
                             resultado = "Atenção! ";
                             mensagem = "Provavelmente você está acima do peso!";
                           }
-                          var imcString = imcInt.toStringAsPrecision(4);
-                          imc = imcString;
+
+                          imc = imcDouble.toStringAsPrecision(4);
                         });
                       }
                     },
@@ -207,9 +216,8 @@ class _MyHomePageState extends State<MyHomePage> {
                     ),
                   ),
                 ),
-
                 Padding(
-                  padding: EdgeInsets.only(top: 30),
+                padding: EdgeInsets.only(top: 30),
                   child: (resultado == "Atenção! ")
                   ? RichText(
                     text: TextSpan(
@@ -231,7 +239,36 @@ class _MyHomePageState extends State<MyHomePage> {
               ],
             ),
           ),
-        ),
+        )
+         : Container (
+           child: Center(
+             child: Text (
+               'Em desenvolvimento',
+               style: TextStyle(
+                 fontSize: 30,
+               ),
+
+             )
+           ),
+         ),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            title: Text("Minha conta"),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.favorite),
+            title: Text("IMC"),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.motorcycle),
+            title: Text("Configurações")
+          ),
+        ],
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -240,24 +277,6 @@ class _MyHomePageState extends State<MyHomePage> {
           });
         },
         child: const Icon(Icons.refresh),
-        backgroundColor: Colors.purple,
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: 0,
-        items: [
-          BottomNavigationBarItem(
-              icon: Icon(Icons.favorite),
-              title: Text("IMC")
-          ),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.person),
-              title: Text("Minha conta")
-          ),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.motorcycle),
-              title: Text("Configurações")
-          ),
-        ],
       ),
     );
   }
